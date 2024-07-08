@@ -3,7 +3,6 @@ import KanbasNavigation from "./Navigation";
 import Courses from "./Courses";
 
 import { Routes, Route, Navigate } from "react-router";
-import CoursesNavigation from "./Courses/Navigation";
 
 export default function Kanbas() {
     return (
