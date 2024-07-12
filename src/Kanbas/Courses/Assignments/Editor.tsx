@@ -3,134 +3,141 @@ import React from 'react';
 const AssignmentEditor: React.FC = () => {
   return (
     <div id="wd-assignments-editor">
-      <section>
-        <label htmlFor="wd-name">Assignment Name</label>
-        <input id="wd-name" defaultValue="A1 - ENV + HTML" />
-        <br />
-        <br />
-        <textarea id="wd-description" cols={30} rows={10} defaultValue={`The assignment is available online. Submit a link to the landing page of your project by the deadline specified in the course syllabus. Ensure that the landing page includes an overview of your project, key features, and any relevant documentation. This will help us understand the scope and functionality of your work. Additionally, include instructions on how to navigate your project and access its main components. If you have used any third-party libraries or tools, mention them along with their respective documentation links. Make sure your landing page is clear, concise, and professional, as it reflects your work quality.`} />
-      </section>
+      <div className="mb-3">
+        <label htmlFor="wd-name" className="form-label">Assignment Name</label>
+        <input type="email" className="form-control" id="exampleFormControlInput1" defaultValue="A1"/>
+      </div>
+      <div className="mb-3">
+        <textarea className="form-control" id="wd-description" cols={30} rows={10} defaultValue={`The assignment is available online.\n Submit a link to the landing page of your project by the deadline specified in the course syllabus. Ensure that the landing page includes an overview of your project, key features, and any relevant documentation. This will help us understand the scope and functionality of your work. Additionally, include instructions on how to navigate your project and access its main components. If you have used any third-party libraries or tools, mention them along with their respective documentation links. Make sure your landing page is clear, concise, and professional, as it reflects your work quality.`} ></textarea>
+      </div>
+
+      <div className="row align-items-start">
+        <div className="col-auto pe-0">
+          <label htmlFor="wd-points" className="form-label">Points</label>
+        </div>
+        <div className="col">
+          <input type="number" defaultValue={100} className="form-control" id="wd-points" />
+        </div>
+      </div>
       <br />
-      <section>
-        <table>
-          <tbody>
 
-            <tr>
-              <td align="right" valign="top">
-                <label htmlFor="wd-points">Points</label>
-              </td>
-              <td>
-                <input id="wd-points" defaultValue={100} />
-              </td>
-            </tr>
-
-            <tr>
-              <td align="right" valign="top">
-                <label htmlFor="wd-group">Assignment Group</label>
-              </td>
-              <td>
-                <select id="wd-group" defaultValue="ASSIGNMENTS">
+      <div className="row align-items-start">
+        <div className="col-auto pe-0">
+          <label htmlFor="wd-group" className="form-label">Assignment Group</label>
+        </div>
+        <div className="col">
+              <select className="form-select" id="wd-group" defaultValue="ASSIGNMENTS">
                   <option value="ASSIGNMENT 1">ASSIGNMENT 1</option>
                   <option value="ASSIGNMENT 2">ASSIGNMENT 2</option>
                   <option value="ASSIGNMENTS">ASSIGNMENTS</option>
                   <option value="ASSIGNMENT 3">ASSIGNMENT 3</option>
-                </select>
-              </td>
-            </tr>
+              </select>
+          </div>
+      </div>
+      
+      <br />
 
-            <tr>
-              <td align="right" valign="top">
-                <label htmlFor="wd-display-grade-as">Display Grade as</label>
-              </td>
-              <td>
-                <select id="wd-display-grade-as" defaultValue="Percentage">
-                  <option value="Point">Point</option>
-                  <option value="Percentage">Percentage</option>
-                </select>
-              </td>
-            </tr>
+      <div className="row align-items-start">  {/* Using Bootstrap classes for alignment */}
+        <div className="col-auto pe-0">  {/* 'pe-0' to ensure no padding on the right */}
+          <label htmlFor="wd-display-grade-as" className="form-label">Display Grade as</label>
+        </div>
+        <div className="col">
+          <select className="form-select" id="wd-display-grade-as" defaultValue="Percentage">
+            <option value="Point">Point</option>
+            <option value="Percentage">Percentage</option>
+          </select>
+        </div>
+      </div>
 
-            <tr>
-              <td align="right" valign="top">
-                <label htmlFor="wd-submission-type">Submission Type</label>
-              </td>
-              <td>
-                <select id="wd-submission-type" defaultValue="Online">
-                  <option value="In Person">In Person</option>
-                  <option value="Online">Online</option>
-                </select>
-              </td>
-            </tr>
+      <br />
 
-            <tr>
-              <td></td>
-              <td>
-                <label>Online Entry Options</label>
-                <br />
-                <input type="checkbox" id="wd-text-entry" />
-                <label htmlFor="wd-text-entry">Text Entry</label>
-                <br />
-                <input type="checkbox" id="wd-website-url" />
-                <label htmlFor="wd-website-url">Website URL</label>
-                <br />
-                <input type="checkbox" id="wd-media-recordings" />
-                <label htmlFor="wd-media-recordings">Media Recording</label>
-                <br />
-                <input type="checkbox" id="wd-student-annotation" />
-                <label htmlFor="wd-student-annotation">Student Annotation</label>
-                <br />
-                <input type="checkbox" id="wd-file-upload" />
-                <label htmlFor="wd-file-upload">File Uploads</label>
-              </td>
-            </tr>
+      <div className="row align-items-start">
+   
+        <div className="col-auto pe-0">
+          <label htmlFor="wd-submission-type" className="form-label me-2">Submission Type</label>
+        </div>
+        
+        <div className="col" style={{
+            border: '1px solid lightgrey',    // Solid border with a specific color
+            padding: '10px',             // Padding around the content within the div
+            borderRadius: '10px'         // Rounded corners for the border
+        }}>
+          <select className="form-select" id="wd-submission-type" defaultValue="Online">
+            <option value="In Person">In Person</option>
+            <option value="Online">Online</option>
+          </select>
+            <div className="mt-3">
+              <label className="form-label">Online Entry Options</label>
+              <div className="form-check">
+                <input className="form-check-input" type="checkbox" id="wd-text-entry" />
+                <label className="form-check-label" htmlFor="wd-text-entry">Text Entry</label>
+              </div>
+              <div className="form-check">
+                <input className="form-check-input" type="checkbox" id="wd-website-url" defaultChecked />
+                <label className="form-check-label" htmlFor="wd-website-url">Website URL</label>
+              </div>
+              <div className="form-check">
+                <input className="form-check-input" type="checkbox" id="wd-media-recordings" />
+                <label className="form-check-label" htmlFor="wd-media-recordings">Media Recording</label>
+              </div>
+              <div className="form-check">
+                <input className="form-check-input" type="checkbox" id="wd-student-annotation" />
+                <label className="form-check-label" htmlFor="wd-student-annotation">Student Annotation</label>
+              </div>
+              <div className="form-check">
+                <input className="form-check-input" type="checkbox" id="wd-file-upload" />
+                <label className="form-check-label" htmlFor="wd-file-upload">File Uploads</label>
+              </div>
+          </div>
+        </div>
+      </div>
+     
+     <br></br>
 
-            <tr>
-              <td align="right" valign="top">
-                <label htmlFor="wd-assign">Assign</label>
-              </td>
-              <td>
-                <label htmlFor="wd-assign-to">Assign to</label>
-                <br />
-                <input id="wd-assign-to" defaultValue="Everyone" />
-                <br />
-                <br />
-                <label htmlFor="wd-due-date">Due</label>
-                <br />
-                <input type="date" id="wd-due-date" defaultValue="2000-05-13" />
-                <br />
-                <br />
-                <label htmlFor="wd-available-from">Available from</label>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <label htmlFor="wd-available-until">Until</label>
-                <br />
-                <input type="date" id="wd-available-from" defaultValue="2000-01-21" />
-                <input type="date" id="wd-available-until" defaultValue="2000-01-21" />
-                <br />
-                <br />
-              </td>
-            </tr>
+    <div className="row">
+      <div className="col-auto text-end pe-2 align-self-start"> {/* Align label to the right */}
+        <label htmlFor="wd-assign" className="form-label">Assign</label>
+      </div>
+      <div className="col" style={{
+          border: '1px solid lightgrey',    // Solid border with a specific color
+          padding: '10px',             // Padding around the content within the div
+          borderRadius: '10px'         // Rounded corners for the border
+      }}>
+        <label htmlFor="wd-assign-to" className="form-label">Assign to</label>
+        <input type="text" id="wd-assign-to" className="form-control" defaultValue="Everyone" />
+        <div className="mt-3">
+          <label htmlFor="wd-due-date" className="form-label">Due</label>
+          <input type="date" id="wd-due-date" className="form-control" defaultValue="2024-05-13" />
+        </div>
+        <div className="mt-3 d-flex justify-content-start">
+          <div>
+            <label htmlFor="wd-available-from" className="form-label">Available from</label>
+            <input type="date" id="wd-available-from" className="form-control" defaultValue="2024-05-06" />
+          </div>
+          <div className="ms-5"> {/* Margin to space out the 'Until' input */}
+            <label htmlFor="wd-available-until" className="form-label">Until</label>
+            <input type="date" id="wd-available-until" className="form-control" defaultValue="2024-05-13" />
+          </div>
+        </div>
+      </div>
+    </div>
 
-            <tr>
-              <td colSpan={2}>
-                <hr />
-              </td>
-            </tr>
+      <br />
+      <hr/>
 
-            <tr>
-              <td></td>
-              <td align="right" valign="top">
-                <button id="wd-btn-save" onClick={() => alert("Save button clicked!")} type="button">
-                  Save
-                </button>
-                <button id="wd-btn-cancel" onClick={() => alert("Cancel button clicked!")} type="button">
-                  Cancel
-                </button>
-              </td>
-            </tr>
-            
-          </tbody>
-        </table>
-      </section>
+      <div className="row">
+        <div className="col text-end"> {/* Ensures right alignment of buttons */}
+          
+          <button id="wd-btn-cancel" className="btn btn-secondary me-2" onClick={() => alert("Cancel button clicked!")} type="button">
+            Cancel
+          </button>
+          <button id="wd-btn-save" className="btn btn-danger" onClick={() => alert("Save button clicked!")} type="button">
+            Save
+          </button>
+        </div>
+      </div>
+
+
     </div>
   );
 };
