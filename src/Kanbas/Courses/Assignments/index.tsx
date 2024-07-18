@@ -3,8 +3,15 @@ import { CiSearch } from "react-icons/ci";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { MdOutlineAssignment } from "react-icons/md";
+import { useParams } from 'react-router-dom';
+import { assignments } from '../../Database';
 
 export default function Assignments() {
+    const { id: courseId } = useParams(); // Get the current course's ID from the URL
+    const courseAssignments = assignments.filter(assignment => assignment.course === courseId); // Filter assignments by course ID
+    
+    console.log("courseAssignments: ", courseAssignments);
+
     return (
       <div id="wd-assignments">
         <div id="wd-assignments-controls" className="d-flex align-items-center mb-3">
@@ -35,49 +42,26 @@ export default function Assignments() {
             </div>
 
             <ul className="wd-lessons list-group rounded-0">
-                <li className="wd-assignment-list-item list-group-item p-3 ps-1">
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <BsGripVertical className="me-2 fs-3" />
-                        <MdOutlineAssignment className="me-2 fs-3" style={{ color: 'green' }}/>
-                        <div style={{ flex: 1 }}>
-                            
-                        <a href="#/Kanbas/Courses/1234/Assignments/123" style={{ textDecoration: 'none', color: 'inherit' }}><h4>A1</h4></a>
-                            <p>
-                                <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 6 at 12:00 am | <b>Due</b> May 13 at 11:59 pm | 100pts
-                            </p>
+                {courseAssignments.map(assignment => (
+                    <li key={assignment._id} className="wd-assignment-list-item list-group-item p-3 ps-1">
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <BsGripVertical className="me-2 fs-3" />
+                            <MdOutlineAssignment className="me-2 fs-3" style={{ color: 'green' }}/>
+                            <div style={{ flex: 1 }}>
+                                <a href={`#/Kanbas/Courses/${courseId}/Assignments/${assignment._id}`}
+                                    style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <h4>{assignment.title}</h4>
+                                </a>
+                                <p>
+                                    <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 6 at 12:00 am | <b>Due</b> May 13 at 11:59 pm | 100pts
+                                </p>
+                            </div>
+                            <LessonControlButtons />
                         </div>
-                        <LessonControlButtons />
-                    </div>
-                </li>
-                <li className="wd-assignment-list-item list-group-item p-3 ps-1">
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <BsGripVertical className="me-2 fs-3" />
-                        <MdOutlineAssignment className="me-2 fs-3" style={{ color: 'green' }}/>
-                        <div style={{ flex: 1 }}>
-                            
-                            <a href="#/Kanbas/Courses/1234/Assignments/123" style={{ textDecoration: 'none', color: 'inherit' }}><h4>A2</h4></a>
-                            <p>
-                                <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 13 at 12:00 am | <b>Due</b> May 20 at 11:59 pm | 100pts
-                            </p>
-                        </div>
-                        <LessonControlButtons />
-                    </div>
-                </li>
-                <li className="wd-assignment-list-item list-group-item p-3 ps-1">
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <BsGripVertical className="me-2 fs-3" />
-                        <MdOutlineAssignment className="me-2 fs-3" style={{ color: 'green' }}/>
-                        <div style={{ flex: 1 }}>
-                            
-                        <a href="#/Kanbas/Courses/1234/Assignments/123" style={{ textDecoration: 'none', color: 'inherit' }}><h4>A3</h4></a>
-                            <p className="me-2">
-                                <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 20 at 12:00 am | <b>Due</b> May 27 at 11:59 pm | 100pts
-                            </p>
-                        </div>
-                        <LessonControlButtons />
-                    </div>
-                </li>
+                    </li>
+                ))}
             </ul>
+
           </li>
         </ul>
     </div>

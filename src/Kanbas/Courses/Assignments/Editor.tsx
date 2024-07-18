@@ -1,11 +1,30 @@
 import React from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { assignments } from '../../Database'; 
 
 const AssignmentEditor: React.FC = () => {
+  const { id, aid } = useParams(); // Get both course ID and assignment ID from URL
+  const assignment = assignments.find(assgn => assgn._id === aid); // Find the specific assignment
+
+  console.log("AssignmentEditor", id, aid);
+  console.log(assignment);
+
+  if (!assignment) {
+    // Handle case where no assignment is found
+    return (
+      <div id="wd-assignments-editor">
+        <div className="alert alert-danger" role="alert">
+          No assignment found for the given ID.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div id="wd-assignments-editor">
       <div className="mb-3">
         <label htmlFor="wd-name" className="form-label">Assignment Name</label>
-        <input type="email" className="form-control" id="exampleFormControlInput1" defaultValue="A1"/>
+        <input type="text" className="form-control" id="exampleFormControlInput1" defaultValue={assignment.title}/>
       </div>
       <div className="mb-3">
         <textarea className="form-control" id="wd-description" cols={30} rows={10} defaultValue={`The assignment is available online.\n Submit a link to the landing page of your project by the deadline specified in the course syllabus. Ensure that the landing page includes an overview of your project, key features, and any relevant documentation. This will help us understand the scope and functionality of your work. Additionally, include instructions on how to navigate your project and access its main components. If you have used any third-party libraries or tools, mention them along with their respective documentation links. Make sure your landing page is clear, concise, and professional, as it reflects your work quality.`} ></textarea>
@@ -126,14 +145,13 @@ const AssignmentEditor: React.FC = () => {
       <hr/>
 
       <div className="row">
-        <div className="col text-end"> {/* Ensures right alignment of buttons */}
-          
-          <button id="wd-btn-cancel" className="btn btn-secondary me-2" onClick={() => alert("Cancel button clicked!")} type="button">
+        <div className="col text-end">
+          <Link to={`/Kanbas/Courses/${id}/Assignments`} className="btn btn-secondary me-2">
             Cancel
-          </button>
-          <button id="wd-btn-save" className="btn btn-danger" onClick={() => alert("Save button clicked!")} type="button">
+          </Link>
+          <Link to={`/Kanbas/Courses/${id}/Assignments`} className="btn btn-danger">
             Save
-          </button>
+          </Link>
         </div>
       </div>
 
