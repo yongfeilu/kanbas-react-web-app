@@ -3,14 +3,28 @@ import { CiSearch } from "react-icons/ci";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { MdOutlineAssignment } from "react-icons/md";
-import { useParams } from 'react-router-dom';
-import { assignments } from '../../Database';
+import { FaTrash } from "react-icons/fa";
+import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { deleteAssignment }
+  from "./reducer";
+import { useSelector, useDispatch } from "react-redux";
+
 
 export default function Assignments() {
+
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     const { id: courseId } = useParams(); // Get the current course's ID from the URL
-    const courseAssignments = assignments.filter(assignment => assignment.course === courseId); // Filter assignments by course ID
-    
-    console.log("courseAssignments: ", courseAssignments);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [courseAssignments, setCourseAssignments] = useState([]);
+
+    useEffect(() => {
+        if (assignments && courseId) {
+            const filteredAssignments = assignments.filter((assignment: any) => assignment.course === courseId);
+            setCourseAssignments(filteredAssignments);
+        }
+    }, [assignments, courseId]);
 
     return (
       <div id="wd-assignments">
@@ -26,7 +40,8 @@ export default function Assignments() {
                 />
             </div>
             <button id="wd-add-assignment-group" className="btn btn-outline-secondary me-2">+Group</button>
-            <button id="wd-add-assignment" className="btn btn-danger">+Assignment</button>
+            <button id="wd-add-assignment" className="btn btn-danger" onClick={() => navigate(`/Kanbas/Courses/${courseId}/Assignments/new`)}>+Assignment</button>
+            
         </div>
 
         <ul id="wd-assignment-list" className="list-group rounded-0">
@@ -42,11 +57,12 @@ export default function Assignments() {
             </div>
 
             <ul className="wd-lessons list-group rounded-0">
-                {courseAssignments.map(assignment => (
+                {courseAssignments.map((assignment : any) => (
                     <li key={assignment._id} className="wd-assignment-list-item list-group-item p-3 ps-1">
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <BsGripVertical className="me-2 fs-3" />
                             <MdOutlineAssignment className="me-2 fs-3" style={{ color: 'green' }}/>
+                            
                             <div style={{ flex: 1 }}>
                                 <a href={`#/Kanbas/Courses/${courseId}/Assignments/${assignment._id}`}
                                     style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -56,12 +72,18 @@ export default function Assignments() {
                                     <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 6 at 12:00 am | <b>Due</b> May 13 at 11:59 pm | 100pts
                                 </p>
                             </div>
+                            <FaTrash className="text-danger me-2 mb-1" onClick={() => {
+                                    const confirmDelete = window.confirm("Are you sure you want to remove this assignment?");
+                                    if (confirmDelete) {
+                                        dispatch(deleteAssignment(assignment._id));
+                                    }
+                                } 
+                            }/>
                             <LessonControlButtons />
                         </div>
                     </li>
                 ))}
             </ul>
-
           </li>
         </ul>
     </div>
