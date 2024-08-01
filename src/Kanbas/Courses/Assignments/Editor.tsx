@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-// import { useParams, Link } from 'react-router-dom';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { addAssignment, updateAssignment } from './reducer';
+import * as client from "./clients";
 
 
 export default function AssignmentEditor() {
@@ -10,10 +10,11 @@ export default function AssignmentEditor() {
   const { id: courseId, aid: assignmentId } = useParams(); // Get both course ID and assignment ID from URL
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const assignments = useSelector((state: any) => state.assignmentsReducer.assignments); // Get assignments from the state
   const assignment = assignments.find((assgn : any) => assgn._id === assignmentId); // Find the specific assignment
 
-  console.log("AssignmentEditor", courseId, assignmentId);
+  console.log("AssignmentEditor", courseId, assignmentId, assignments);
   console.log(assignment);
 
   const [assignmentName, setAssignmentName] = useState(assignment ? assignment.title : '');
@@ -27,17 +28,15 @@ export default function AssignmentEditor() {
   const [availableFrom, setAvailableFrom] = useState(assignment ? assignment.availableFrom ? assignment.availableFrom : '2024-05-06' : '');
   const [availableUntil, setAvailableUntil] = useState(assignment ? assignment.availableUntil ? assignment.availableUntil : '2024-05-13': '');
 
+  const createAssignment = async (assignment: any) => {
+    const newAssignment = await client.createAssignment(courseId as string, assignment);
+    dispatch(addAssignment(newAssignment));
+  };
 
-  // if (!assignment) {
-  //   // Handle case where no assignment is found
-  //   return (
-  //     <div id="wd-assignments-editor">
-  //       <div className="alert alert-danger" role="alert">
-  //         No assignment found for the given ID.
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  const saveAssignment = async (assignment: any) => {
+    const status = await client.updateAssignment(assignment);
+    dispatch(updateAssignment(assignment));
+  }; 
 
   const handleSave = () => {
 
@@ -55,7 +54,7 @@ export default function AssignmentEditor() {
         availableFrom,
         availableUntil,
       };
-      dispatch(updateAssignment(updatedAssignment));
+      saveAssignment(updatedAssignment);
     } else {
       // Add new assignment
       const newAssignment = {
@@ -71,7 +70,7 @@ export default function AssignmentEditor() {
         availableFrom,
         availableUntil,
       };
-      dispatch(addAssignment(newAssignment));
+      createAssignment(newAssignment);
     }
     navigate(`/Kanbas/Courses/${courseId}/Assignments`);
 
@@ -216,9 +215,6 @@ export default function AssignmentEditor() {
           <Link to={`/Kanbas/Courses/${courseId}/Assignments`} className="btn btn-secondary me-2">
             Cancel
           </Link>
-          {/* <Link to={`/Kanbas/Courses/${courseId}/Assignments`} className="btn btn-danger">
-            Save
-          </Link> */}
           <button onClick={handleSave} className="btn btn-danger">
             Save
           </button>

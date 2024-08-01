@@ -6,9 +6,10 @@ import { MdOutlineAssignment } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
-import { deleteAssignment }
+import { deleteAssignment, setAssignments }
   from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
+import * as client from "./clients";
 
 
 export default function Assignments() {
@@ -17,14 +18,19 @@ export default function Assignments() {
     const { id: courseId } = useParams(); // Get the current course's ID from the URL
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [courseAssignments, setCourseAssignments] = useState([]);
 
+    const fetchAssignments = async () => {
+        const assignments = await client.findAssignmentsForCourse(courseId as string);
+        dispatch(setAssignments(assignments));
+    };
     useEffect(() => {
-        if (assignments && courseId) {
-            const filteredAssignments = assignments.filter((assignment: any) => assignment.course === courseId);
-            setCourseAssignments(filteredAssignments);
-        }
-    }, [assignments, courseId]);
+        fetchAssignments();
+    }, []);
+
+    const removeAssignment = async (assignmentId: string) => {
+        await client.deleteAssignment(assignmentId);
+        dispatch(deleteAssignment(assignmentId));
+    };
 
     return (
       <div id="wd-assignments">
@@ -57,7 +63,7 @@ export default function Assignments() {
             </div>
 
             <ul className="wd-lessons list-group rounded-0">
-                {courseAssignments.map((assignment : any) => (
+                {assignments.map((assignment : any) => (
                     <li key={assignment._id} className="wd-assignment-list-item list-group-item p-3 ps-1">
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <BsGripVertical className="me-2 fs-3" />
@@ -75,7 +81,7 @@ export default function Assignments() {
                             <FaTrash className="text-danger me-2 mb-1" onClick={() => {
                                     const confirmDelete = window.confirm("Are you sure you want to remove this assignment?");
                                     if (confirmDelete) {
-                                        dispatch(deleteAssignment(assignment._id));
+                                        removeAssignment(assignment._id)
                                     }
                                 } 
                             }/>
