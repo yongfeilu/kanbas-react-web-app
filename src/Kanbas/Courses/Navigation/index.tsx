@@ -5,7 +5,7 @@ import "./index.css";
 export default function CoursesNavigation() {
    const { id } = useParams(); // Retrieve the current course's ID
    const location = useLocation(); // Retrieve the current pathname
-   const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "Grades"];
+   const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "Grades", "People"];
 
    return (
       <div id="wd-courses-navigation" className="list-group fs-5 rounded-0">
