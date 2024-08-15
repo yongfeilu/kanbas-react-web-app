@@ -12,7 +12,12 @@ export default function Profile() {
     const fetchProfile = async () => {
         try {
             const account = await client.profile();
-            setProfile(account);
+            // setProfile(account);
+            const formattedProfile = {
+                ...account,
+                dob: account.dob ? new Date(account.dob).toISOString().substring(0, 10) : ""
+            };
+            setProfile(formattedProfile);
         } catch (err: any) {
             navigate("/Kanbas/Account/Signin");
         }
@@ -43,7 +48,7 @@ export default function Profile() {
                         onChange={(e) => setProfile({ ...profile, dob: e.target.value })} type="date"/>
                 <input className="wd-email form-control" value={profile.email}
                         onChange={(e) => setProfile({ ...profile, email: e.target.value })}/>
-                <select className="wd-role form-select" onChange={(e) => setProfile({ ...profile, role: e.target.value })}>
+                <select className="wd-role form-select" value={profile.role} onChange={(e) => setProfile({ ...profile, role: e.target.value })}>
                     <option value="USER">User</option>            <option value="ADMIN">Admin</option>
                     <option value="FACULTY">Faculty</option>      <option value="STUDENT">Student</option>
                 </select>
