@@ -21,17 +21,49 @@ export default function Kanbas() {
     useEffect(() => {
       fetchCourses();
     }, []);  
+
+    const [course, setCourse] = useState<any>({});
+
+    useEffect(() => {
+      console.log("Course state updated:", course);
+    }, [course]);
+
+    // const addNewCourse = async () => {
+    //     const courseWithDefaultImage = {
+    //         ...course,
+    //         image: course.image || "network.jpg" // Replace with your actual default image URL
+    //     };
   
-    const [course, setCourse] = useState<any>({
-        _id: "0", name: "New Course", number: "New Number",
-        startDate: "2023-09-10", endDate: "2023-12-15",
-        image: "/images/reactjs.jpg", description: "New Description"
-    });
+    //     console.log("addNewCourse", courseWithDefaultImage)
+    //     const newCourse = await client.createCourse(courseWithDefaultImage);
+    //     // setCourses([...courses, newCourse]);
+    //     fetchCourses();
+    //     setCourse({});
+    // };
 
     const addNewCourse = async () => {
-        const newCourse = await client.createCourse(course);
-        setCourses([...courses, { ...courses, newCourse }]);
-    };
+      // Check if the course number is unique
+      const isNumberUnique = !courses.some(existingCourse => existingCourse.number === course.number);
+  
+      if (!isNumberUnique) {
+          alert("Course number must be unique. Please choose a different number.");
+          return;
+      }
+  
+      // Add a default image URL if the course doesn't have an image field
+      const courseWithDefaultImage = {
+          ...course,
+          image: course.image || "network.jpg" // Replace with your actual default image URL
+      };
+  
+      console.log("addNewCourse", courseWithDefaultImage);
+      await client.createCourse(courseWithDefaultImage);
+      
+      // Refresh the course list and reset the form
+      fetchCourses();
+      setCourse({});
+  };
+  
 
     const deleteCourse = async (courseId: string) => {
         await client.deleteCourse(courseId);
@@ -39,6 +71,7 @@ export default function Kanbas() {
     };
 
     const updateCourse = async () => {
+        console.log("updateCourse from Kanbas", course);
         await client.updateCourse(course);
         setCourses(
           courses.map((c) => {
@@ -49,6 +82,7 @@ export default function Kanbas() {
             }
           })
         );
+        setCourse({});
     };
 
     return (

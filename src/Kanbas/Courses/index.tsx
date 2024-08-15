@@ -12,8 +12,9 @@ import PeopleDetails from "./People/Details";
 
 export default function Courses({ courses }: { courses: any[]; }) {
   const { id } = useParams();
-  const course = courses.find((course) => course._id === id);
+  const course = courses.find((course) => course.number === id);
   const { pathname } = useLocation();
+  console.log("Courses", pathname, course);
   return (
     <div id="wd-courses">
         <h2 className="text-danger"> 

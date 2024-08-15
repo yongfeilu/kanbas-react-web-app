@@ -8,6 +8,7 @@ import { setModules, addModule, editModule, updateModule, deleteModule }
   from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 import * as client from "./client";
+import { Link } from "react-router-dom";
 
 
 export default function Modules() {
@@ -16,16 +17,21 @@ export default function Modules() {
     const { modules } = useSelector((state: any) => state.modulesReducer);
     const dispatch = useDispatch();
     const fetchModules = async () => {
-      const modules = await client.findModulesForCourse(id as string);
-      dispatch(setModules(modules));
+      const fetchedModules = await client.findModulesForCourse(id as string);
+      dispatch(setModules(fetchedModules));
     };
     useEffect(() => {
       fetchModules();
     }, []);
 
+    useEffect(() => {
+      console.log("Updated modules state:", modules);
+    }, [modules]);
+
     const createModule = async (module: any) => {
       const newModule = await client.createModule(id as string, module);
       dispatch(addModule(newModule));
+      fetchModules();
     };
 
     const removeModule = async (moduleId: string) => {
@@ -37,13 +43,15 @@ export default function Modules() {
       const status = await client.updateModule(module);
       dispatch(updateModule(module));
     };  
-  
+
     return (
       <div id="wd-modules">
         <ModulesControls setModuleName={setModuleName} moduleName={moduleName} 
           addModule={() => {
+              console.log("addModule", moduleName, id);
               createModule({ name: moduleName, course: id });
               setModuleName("");
+              fetchModules();
             }}
         /><br /><br /><br /><br />
         <ul id="wd-modules" className="list-group rounded-0">
@@ -53,7 +61,9 @@ export default function Modules() {
             <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
               <div className="wd-title p-3 ps-2 bg-secondary">
                 <BsGripVertical className="me-2 fs-3" />
-                {!module.editing && module.name}
+                <Link to={`/Kanbas/Courses/${id}/modules/${module._id}`} className="text-white text-decoration-none">
+                  {!module.editing && module.name}
+                </Link>
                 { module.editing && (
                   <input className="form-control w-50 d-inline-block" value={module.name}
                     onChange={(e) => saveModule({ ...module, name: e.target.value }) }
@@ -64,8 +74,15 @@ export default function Modules() {
                   }} />
                 )}
                 <ModuleControlButtons moduleId={module._id}
-                  deleteModule={(moduleId) => { removeModule(moduleId); }}
-                  editModule={(moduleId) => dispatch(editModule(moduleId))}
+                  deleteModule={(moduleId) => { 
+                    console.log("deleteModule", moduleId);
+                    removeModule(moduleId); 
+                  }}
+                  editModule={(moduleId) => {
+                      console.log("editModule", moduleId);
+                      dispatch(editModule(moduleId));
+                    }
+                  }
                 />
               </div>
               {module.lessons && (

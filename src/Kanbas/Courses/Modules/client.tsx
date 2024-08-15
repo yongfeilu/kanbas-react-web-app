@@ -5,12 +5,14 @@ const COURSES_API = `${REMOTE_SERVER}/api/courses`;
 const MODULES_API = `${REMOTE_SERVER}/api/modules`;
 
 export const updateModule = async (module: any) => {
+    console.log("updateModule", module);
     const response = await axios.
       put(`${MODULES_API}/${module._id}`, module);
     return response.data;
 };  
 
 export const deleteModule = async (moduleId: string) => {
+  console.log("deleteModule", moduleId);
   const response = await axios
     .delete(`${MODULES_API}/${moduleId}`);
   return response.data;
