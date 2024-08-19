@@ -41,7 +41,9 @@ export default function QuizDetails() {
           <div className="d-flex justify-content-end mb-3">
             {userRole === "FACULTY" && (
               <>
-                <button className="btn btn-secondary me-2" >Preview</button>
+                <button className="btn btn-secondary me-2" onClick={() => {
+                   navigate(`./Questions`)
+                }} >Preview</button>
                 <button className="btn btn-primary" onClick={()=>{
                     navigate(`./Editor`); 
                 }} >Edit</button>
