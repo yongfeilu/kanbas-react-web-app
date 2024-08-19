@@ -27,6 +27,9 @@ export default function Assignments() {
         fetchAssignments();
     }, []);
 
+    const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
+    const userRole = currentUser?.role;
+
     const removeAssignment = async (assignmentId: string) => {
         await client.deleteAssignment(assignmentId);
         dispatch(deleteAssignment(assignmentId));
@@ -45,9 +48,12 @@ export default function Assignments() {
                     placeholder="Search for Assignments" 
                 />
             </div>
-            <button id="wd-add-assignment-group" className="btn btn-outline-secondary me-2">+Group</button>
-            <button id="wd-add-assignment" className="btn btn-danger" onClick={() => navigate(`/Kanbas/Courses/${courseId}/Assignments/new`)}>+Assignment</button>
-            
+            {userRole === "FACULTY" && (
+                <div>
+                    <button id="wd-add-assignment-group" className="btn btn-outline-secondary me-2">+Group</button>
+                    <button id="wd-add-assignment" className="btn btn-danger" onClick={() => navigate(`/Kanbas/Courses/${courseId}/Assignments/new`)}>+Assignment</button>
+                </div>
+            )}
         </div>
 
         <ul id="wd-assignment-list" className="list-group rounded-0">
@@ -78,13 +84,15 @@ export default function Assignments() {
                                     <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 6 at 12:00 am | <b>Due</b> May 13 at 11:59 pm | 100pts
                                 </p>
                             </div>
-                            <FaTrash className="text-danger me-2 mb-1" onClick={() => {
-                                    const confirmDelete = window.confirm("Are you sure you want to remove this assignment?");
-                                    if (confirmDelete) {
-                                        removeAssignment(assignment._id)
-                                    }
-                                } 
-                            }/>
+                            {userRole === "FACULTY" && (
+                                <FaTrash className="text-danger me-2 mb-1" onClick={() => {
+                                        const confirmDelete = window.confirm("Are you sure you want to remove this assignment?");
+                                        if (confirmDelete) {
+                                            removeAssignment(assignment._id)
+                                        }
+                                    } 
+                                }/>
+                            )}
                             <LessonControlButtons />
                         </div>
                     </li>

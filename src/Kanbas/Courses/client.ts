@@ -2,6 +2,7 @@ import axios from "axios";
 
 const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 const COURSES_API = `${REMOTE_SERVER}/api/courses`;
+const USERS_API = `${REMOTE_SERVER}/api/users`;
 
 export const fetchAllCourses = async () => {
   const { data } = await axios.get(COURSES_API);
@@ -20,5 +21,10 @@ export const deleteCourse = async (id: string) => {
 
 export const updateCourse = async (course: any) => {
     const response = await axios.put(`${COURSES_API}/${course._id}`, course);
+    return response.data;
+};
+
+export const updateUser = async (user: any) => {
+    const response = await axios.put(`${USERS_API}/${user._id}`, user);
     return response.data;
 };

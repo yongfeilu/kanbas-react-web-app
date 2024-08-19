@@ -15,6 +15,8 @@ export default function Modules() {
     const { id } = useParams();
     const [moduleName, setModuleName] = useState("");
     const { modules } = useSelector((state: any) => state.modulesReducer);
+    const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
+    const userRole = currentUser?.role;
     const dispatch = useDispatch();
     const fetchModules = async () => {
       const fetchedModules = await client.findModulesForCourse(id as string);
@@ -46,14 +48,16 @@ export default function Modules() {
 
     return (
       <div id="wd-modules">
-        <ModulesControls setModuleName={setModuleName} moduleName={moduleName} 
+        
+        <ModulesControls role={userRole} setModuleName={setModuleName} moduleName={moduleName} 
           addModule={() => {
               console.log("addModule", moduleName, id);
               createModule({ name: moduleName, course: id });
               setModuleName("");
               fetchModules();
             }}
-        /><br /><br /><br /><br />
+        />
+        <br /><br /><br /><br />
         <ul id="wd-modules" className="list-group rounded-0">
           {modules
             .filter((module: any) => module.course === id)
@@ -73,17 +77,20 @@ export default function Modules() {
                       }
                   }} />
                 )}
-                <ModuleControlButtons moduleId={module._id}
-                  deleteModule={(moduleId) => { 
-                    console.log("deleteModule", moduleId);
-                    removeModule(moduleId); 
-                  }}
-                  editModule={(moduleId) => {
-                      console.log("editModule", moduleId);
-                      dispatch(editModule(moduleId));
+                {userRole === "FACULTY" && (
+                  <ModuleControlButtons moduleId={module._id}
+                    deleteModule={(moduleId) => { 
+                      console.log("deleteModule", moduleId);
+                      removeModule(moduleId); 
+                    }}
+                    editModule={(moduleId) => {
+                        console.log("editModule", moduleId);
+                        dispatch(editModule(moduleId));
+                      }
                     }
-                  }
-                />
+                  />
+                )}
+                
               </div>
               {module.lessons && (
                 <ul className="wd-lessons list-group rounded-0">
