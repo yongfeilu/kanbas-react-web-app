@@ -116,11 +116,17 @@ export default function QuizEditor() {
       const createdQuestion = await questionClient.createQuestion(quizId as string, newQuestion);
       
       // Update the Redux store with the new question
-      dispatch(updateQuiz({ 
+      const updatedQuiz = {
         ...quiz,
-        questionList: [...quiz.questionList, createdQuestion._id]  // Add new question ID to quiz's question list
-      }));
-      
+        questionList: [...quiz.questionList, createdQuestion._id],  // Add the new question ID to the quiz's question list
+      };
+
+      // Save the updated quiz to the server
+      await client.updateQuiz(updatedQuiz);
+
+      // Update the Redux store with the updated quiz and new question
+      dispatch(updateQuiz(updatedQuiz));
+
       // Optionally, you can dispatch an action to add the question to the questions reducer
       dispatch(addQuestion(createdQuestion));  // You might need to define this action
   
