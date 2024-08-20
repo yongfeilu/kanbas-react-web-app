@@ -15,7 +15,7 @@ import QuizEditor from "./Quizzes/QuizEditor";
 import QuestionPreview from "./Questions";
 
 export default function Courses({ courses }: { courses: any[]; }) {
-  const { id } = useParams();
+  const { id, qid } = useParams();
   const course = courses.find((course) => course.number === id);
   const { pathname } = useLocation();
 
@@ -46,6 +46,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
                 <Route path="Quizzes/:qzid/Editor" element={<QuizEditor />} />
                 {/* QuestionPreview */}
                 <Route path="Quizzes/:qzid/Questions" element={<QuestionPreview />} />
+                <Route path="Quizzes/:qzid/Questions/:qid" element={<QuestionPreview />} />
+                <Route path="Quizzes/:qzid/Questions/:qid/Editor" element={<QuestionPreview />} />
               </Routes>
           </div>
       </div>

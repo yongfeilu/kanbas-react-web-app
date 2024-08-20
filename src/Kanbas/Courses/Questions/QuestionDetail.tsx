@@ -1,23 +1,31 @@
 import React from "react";
-import { useParams } from "react-router";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+
 
 export default function QuestionDetail() {
-    const { questionId } = useParams();
 
+    const { id: courseId, qzid: quizId, qid: questionId } = useParams();
     const questions = useSelector((state: any) => state.questionsReducer.questions);
-    const question = questions.find((q: any) => q._id === questionId);
+
+    const questionIndex = questions.findIndex((q: any) => q._id === questionId);
+
+    const question = questions[questionIndex];
+
+    const prevQuestionId = questionIndex > 0 ? questions[questionIndex - 1]._id : null;
+    const nextQuestionId = questionIndex < questions.length - 1 ? questions[questionIndex + 1]._id : null;
+    
+
+    const navigate = useNavigate();
 
     if (!question) {
         return <div>Loading...</div>;
     }
-
     return (
         <div className="bg-light p-4 rounded shadow-sm" style={{ maxWidth: '700px', margin: '0 auto' }}>
-            <h4 className="mb-3">Quiz Instructions</h4>
             <div className="mb-3">
                 <div className="d-flex justify-content-between">
-                    <h5>Question 1</h5>
+                    <h5>Question {` ${questionIndex + 1}`}</h5>
                     <span>{question.points} pts</span>
                 </div>
                 <div className="border p-3 mb-3 bg-white rounded">
@@ -73,15 +81,18 @@ export default function QuestionDetail() {
                 </div>
             </div>
             <div className="d-flex justify-content-between">
-                <button className="btn btn-secondary">Previous</button>
-                <button className="btn btn-secondary">Next</button>
-            </div>
-            <div className="d-flex justify-content-between align-items-center mt-3">
-                <button className="btn btn-light">Keep Editing This Quiz</button>
-                <div>
-                    <span>Quiz saved at 8:19am</span>
-                    <button className="btn btn-danger ms-3">Submit Quiz</button>
-                </div>
+                {prevQuestionId && (
+                    <button className="btn btn-secondary" 
+                        onClick={() => {navigate(`/Kanbas/Courses/${courseId}/Quizzes/${quizId}/Questions/${prevQuestionId}`)}}>
+                            Previous
+                    </button>
+                )}
+                {nextQuestionId && (
+                    <button className="btn btn-secondary" 
+                        onClick={() => {navigate(`/Kanbas/Courses/${courseId}/Quizzes/${quizId}/Questions/${nextQuestionId}`)}}>
+                            Next
+                    </button>
+                )}
             </div>
         </div>
     );

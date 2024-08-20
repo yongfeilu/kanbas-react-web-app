@@ -37,19 +37,33 @@ export default function QuizDetails() {
     
     return (
         <div className="bg-white p-4 rounded shadow-sm" style={{ maxWidth: '600px', margin: '0 auto' }}>
-          <h2 className="text-center mb-4">{quiz.title}</h2>
-          <div className="d-flex justify-content-end mb-3">
+          
             {userRole === "FACULTY" && (
-              <>
-                <button className="btn btn-secondary me-2" onClick={() => {
-                   navigate(`./Questions`)
-                }} >Preview</button>
-                <button className="btn btn-primary" onClick={()=>{
-                    navigate(`./Editor`); 
-                }} >Edit</button>
-              </>
+                <div className="d-flex justify-content-center align-items-center mb-3">
+                    <button className="btn btn-danger me-2" onClick={() => {
+                      navigate(`./Questions`)
+                    }}>
+                      Start the Quiz
+                    </button>
+                    <button className="btn btn-light me-2 border" onClick={() => {
+                      navigate(`./Questions`)
+                    }} >Preview</button>
+                    <button className="btn btn-light border" onClick={()=>{
+                        navigate(`./Editor`); 
+                    }} >Edit</button>
+                </div>
             )}
-          </div>
+            {userRole === "STUDENT" && (
+                <div className="d-flex justify-content-center align-items-center mb-3">
+                    <button className="btn btn-danger me-2" onClick={() => {
+                      navigate(`./Questions`)
+                    }}>
+                      Start the Quiz
+                    </button>
+                </div>
+            )}
+          <hr/>
+          <h2 className="text-center mb-4">{quiz.title}</h2>
           <div className="text-center">
             <div className="mb-2"><strong>Quiz Type:</strong> {quiz.quizType}</div>
             <div className="mb-2"><strong>Points:</strong> {quiz.points}</div>
