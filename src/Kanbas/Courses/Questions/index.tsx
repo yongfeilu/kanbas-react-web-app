@@ -30,7 +30,8 @@ export default function QuestionPreview() {
     fetchQuestions();
   }, [quizId, dispatch]);
 
-//   console.log("QuestionPreview", quizId, qid);
+  console.log("QuestionPreview", quizId, qid, questions);
+  console.log("QuestionPreview currentUserId", currentUser._id);
 
   const [clickedQuestionId, setClickedQuestionId] = useState<string | null>(null);
 
