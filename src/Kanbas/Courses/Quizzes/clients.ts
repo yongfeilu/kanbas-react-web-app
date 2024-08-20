@@ -47,12 +47,3 @@ export const updateQuiz = async (quiz: any) => {
   return response.data;
 };
 
-export const publishQuiz = async (quizId: string) => {
-  const response = await axios.put(`${QUIZZES_API}/${quizId}/publish`);
-  return response.data;
-};
-
-export const unpublishQuiz = async (quizId: string) => {
-  const response = await axios.put(`${QUIZZES_API}/${quizId}/unpublish`);
-  return response.data;
-};

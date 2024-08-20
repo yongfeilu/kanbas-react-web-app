@@ -30,7 +30,7 @@ export default function QuestionPreview() {
     fetchQuestions();
   }, [quizId, dispatch]);
 
-  console.log("QuestionPreview", quizId, qid);
+//   console.log("QuestionPreview", quizId, qid);
 
   const [clickedQuestionId, setClickedQuestionId] = useState<string | null>(null);
 
@@ -69,7 +69,6 @@ export default function QuestionPreview() {
                 <li key={question._id} className="d-flex align-items-center mb-2">
                     
                     {isEditor ? 
-
                         <a href={`#/Kanbas/Courses/${quiz.courseId}/Quizzes/${quizId}/Questions/${question._id}/Editor`}
                             style={{
                                 textDecoration: 'none',
@@ -99,7 +98,9 @@ export default function QuestionPreview() {
             )}
             <div>
                 <span>Quiz saved at 8:19am</span>
-                <button className="btn btn-danger ms-3">Submit Quiz</button>
+                {!isEditor && (
+                    <button className="btn btn-danger ms-3">Submit Quiz</button>
+                )}
             </div>
         </div>
       {/* <button className="btn btn-primary mt-3" onClick={() => {alert("TODO: handleAddQuestion")}}>+ Add New Question</button> */}

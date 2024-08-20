@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateQuestion } from './reducer';
+import { deleteQuestion, updateQuestion } from './reducer';
 import * as client from './client';
 
 export default function QuestionEditor() {
-  const { qzid: quizId, qid: questionId } = useParams(); // Get both quiz ID and question ID from URL
+  const { id: courseId, qzid: quizId, qid: questionId } = useParams(); // Get both quiz ID and question ID from URL
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -33,7 +33,17 @@ export default function QuestionEditor() {
     }
   }, [question]); // This effect will run every time the question object changes
 
-  
+
+  const handDeleteQuestion = async() => {
+    try {
+        await client.deleteQuestion(questionId as string); // Delete the question using the client API
+        dispatch(deleteQuestion(questionId));
+        // Navigate the user back to the list of questions after deletion
+        navigate(`/Kanbas/Courses/${courseId}/Quizzes/${quizId}/Questions`);
+    } catch (error) {
+        console.error("Error deleting the question:", error);
+    }
+  }
 
   const handleSave = async () => {
     const updatedQuestion = {
@@ -88,7 +98,16 @@ export default function QuestionEditor() {
           className="form-select"
           id="question-type"
           value={type}
-          onChange={(e) => setType(e.target.value)}
+          onChange={(e) => {
+            setType(e.target.value);
+            if (e.target.value === "TrueOrFalse") {
+                setOptions(["True", "False"]);
+                setCorrectAnswers([]); // Optionally clear correct answers
+            } else if (e.target.value === "FillInBlank") {
+                setOptions([]);
+                setCorrectAnswers([]); // Optionally clear correct answers
+            }
+          }}
         >
           <option value="TrueOrFalse">True/False</option>
           <option value="MultiChoice">Multiple Choice</option>
@@ -224,8 +243,14 @@ export default function QuestionEditor() {
 
       <div className="d-flex justify-content-end mt-4">
         <button
+          className="btn btn-danger me-2"
+          onClick={handDeleteQuestion}
+        > Delete 
+        </button>
+        
+        <button
           className="btn btn-secondary me-2"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(`/Kanbas/Courses/${courseId}/Quizzes/${quizId}/Questions/${questionId}`)}
         >
           Cancel
         </button>

@@ -3,7 +3,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateQuiz } from './reducer';
 import * as client from "./clients";
+import * as questionClient from "../Questions/client";
 import QuestionPreview from '../Questions';
+import { addQuestion } from '../Questions/reducer';
 
 export default function QuizEditor() {
   const { id: courseId, qzid: quizId } = useParams(); // Get both course ID and quiz ID from URL
@@ -13,7 +15,9 @@ export default function QuizEditor() {
   const quizzes = useSelector((state: any) => state.quizzesReducer.quizzes); // Get quizzes from the state
   const quiz = quizzes.find((qz: any) => qz._id === quizId); // Find the specific quiz
 
-  console.log("QuizEditor", courseId, quizId, quizzes);
+  const questions = useSelector((state: any) => state.questionsReducer.questions);
+
+  console.log("QuizEditor", courseId, quizId, questions);
   console.log("quiz", quiz);
 
   const formatDate = (isoString: string) => {
@@ -96,11 +100,37 @@ export default function QuizEditor() {
     navigate(`/Kanbas/Courses/${courseId}/Quizzes`); // Navigate back to the Quizzes list
   };
   
-
-  const handleAddQuestion = () => {
-    // Your logic to add a new question goes here.
-    console.log("New question added");
+  const handleAddQuestion = async () => {
+    const newQuestion = {
+      quizId,  // Assuming `quizId` is available in scope from useParams
+      title: "New Question",
+      type: "MultiChoice",  // Default type is Multiple Choice
+      points: 1,
+      question: "Enter your question here.",
+      correctAnswers: [],
+      options: ["Option 1", "Option 2"],  // Default options
+    };
+  
+    try {
+      // Send the new question to the server
+      const createdQuestion = await questionClient.createQuestion(quizId as string, newQuestion);
+      
+      // Update the Redux store with the new question
+      dispatch(updateQuiz({ 
+        ...quiz,
+        questionList: [...quiz.questionList, createdQuestion._id]  // Add new question ID to quiz's question list
+      }));
+      
+      // Optionally, you can dispatch an action to add the question to the questions reducer
+      dispatch(addQuestion(createdQuestion));  // You might need to define this action
+  
+      // Navigate to the editor for the new question
+      navigate(`/Kanbas/Courses/${courseId}/Quizzes/${quizId}/Questions/${createdQuestion._id}/Editor`);
+    } catch (error) {
+      console.error("Failed to create a new question:", error);
+    }
   };
+  
 
   return (
     <div id="wd-quiz-editor">

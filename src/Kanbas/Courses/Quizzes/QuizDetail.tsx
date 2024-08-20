@@ -27,9 +27,6 @@ export default function QuizDetails() {
     
         return `${formattedDate} at ${hours}:${minutes}`;
     };
-
-
-    console.log("QuizDetails", quiz);
     
     if (!quiz) {
         return <div>Loading...</div>;
